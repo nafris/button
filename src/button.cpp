@@ -1,18 +1,20 @@
 //#include "sys.h"
 #include "driver/gpio.h"
 #include "button.h"
+#include "esp_timer.h"
 
 
 Button::Button(uint8_t gpio) {
   buttonGpio = gpio;
-  gpio_set_direction(gpio, GPIO_MODE_INPUT);
+  gpio_set_direction(GPIO_NUM_9, GPIO_MODE_INPUT);
+  //gpio_set_pull_mode(GPIO_NUM_9, GPIO_PULLUP_ONLY);
 }
 
 uint8_t Button::getGpio(void) {
   return buttonGpio;
 }
 
-unsigned long Button::getButtonEndPressed(void) {
+unsigned long long Button::getButtonEndPressed(void) {
   return endPressed;
 }
 
@@ -24,12 +26,12 @@ ButtonState Button::getButtonState(void) {
   return buttonState;
 }
 
-unsigned long Button::getButtonPresStart(void) {
+unsigned long long Button::getButtonPresStart(void) {
   return startPressed;
 }
 
 uint8_t Button::isButtonPressed(void) {
-  if(gpio_get_level(buttonGpio) == PRESSED) return 1;
+  if(gpio_get_level(GPIO_NUM_9) == PRESSED) return 1;
   else return 0;
 }
 
@@ -45,12 +47,14 @@ void Button::setButtonEndPressed(unsigned long endPr) {
   endPressed = endPr;
 }
 
-unsigned long Button::getButtonPressedTime(void) {
+unsigned long long Button::getButtonPressedTime(void) {
+  printf("pressed time %lld \n", endPressed - startPressed);
   return (endPressed - startPressed);
 }
 
 void Button::updateButtonState(void) {
-  unsigned long buttonPressedTime = millis() - getButtonPresStart();
+  unsigned long buttonPressedTime = esp_timer_get_time() - getButtonPresStart();
+  printf("button prssed time %ld \n", buttonPressedTime);
     if(buttonPressedTime <SHORT_PRESS_MIN ) {
     setButtonState(BUTTON_NOT_PRESSED);
   }
