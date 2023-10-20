@@ -4,13 +4,12 @@
 #include "esp_timer.h"
 
 
-Button::Button(uint8_t gpio) {
+Button::Button(gpio_num_t gpio) {
   buttonGpio = gpio;
-  gpio_set_direction(GPIO_NUM_9, GPIO_MODE_INPUT);
-  //gpio_set_pull_mode(GPIO_NUM_9, GPIO_PULLUP_ONLY);
+  gpio_set_direction(gpio, GPIO_MODE_INPUT);
 }
 
-uint8_t Button::getGpio(void) {
+gpio_num_t Button::getGpio(void) {
   return buttonGpio;
 }
 
@@ -48,13 +47,11 @@ void Button::setButtonEndPressed(unsigned long endPr) {
 }
 
 unsigned long long Button::getButtonPressedTime(void) {
-  printf("pressed time %lld \n", endPressed - startPressed);
   return (endPressed - startPressed);
 }
 
 void Button::updateButtonState(void) {
   unsigned long buttonPressedTime = esp_timer_get_time() - getButtonPresStart();
-  printf("button prssed time %ld \n", buttonPressedTime);
     if(buttonPressedTime <SHORT_PRESS_MIN ) {
     setButtonState(BUTTON_NOT_PRESSED);
   }

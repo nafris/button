@@ -1,3 +1,5 @@
+#include "hal/gpio_types.h"
+
 #ifndef BUTTON_H_
 #define BUTTON_H_
 
@@ -27,11 +29,8 @@ class Button {
         #define LONG_PRESS_MIN (MIDDLE_PRESS_MAX + 1)
         #define LONG_PRESS_MAX (LONG_PRESS_MIN + LONG_PRESS_TIME)
 
-
-
      public:
-
-        uint8_t buttonGpio;
+        gpio_num_t buttonGpio;
         ButtonState buttonState = BUTTON_NOT_PRESSED;     // current state of the button
         uint8_t lastButtonState = BUTTON_NOT_PRESSED; // previous state of the button
         unsigned long long startPressed = 0;    // the moment the button was pressed
@@ -39,9 +38,8 @@ class Button {
         unsigned long long holdTime = 0;        // how long the button was hold
         unsigned long long idleTime = 0;        // how long the button was idle
 
-
-        Button(uint8_t);
-        uint8_t getGpio(void);
+        Button(gpio_num_t gpio);
+        gpio_num_t getGpio(void);
         unsigned long long getButtonEndPressed(void);
         void setButtonState(ButtonState);
         ButtonState getButtonState(void);
