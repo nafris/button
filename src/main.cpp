@@ -5,8 +5,6 @@
 #include "esp_timer.h"
 #include "driver/gpio.h"
 
-//#include "sys.h"
-
 //Button poga(GPIO_NUM_9);
 Button poga((gpio_num_t)9);
 extern "C"{
